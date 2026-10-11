@@ -1,0 +1,32 @@
+{
+  "name": "wn8forge",
+  "description": "WN8Forge - World of Tanks stats calculators: WN8 calculator with the official expected values, camo & view range calculator, Marks of Excellence projection, and WN8 goals planner.",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "data:fetch": "node scripts/fetch-data.mjs",
+    "data:generate": "node scripts/generate-data.mjs",
+    "og": "node scripts/generate-og.mjs"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.2.1",
+    "@fontsource-variable/jetbrains-mono": "^5.1.2",
+    "@fontsource-variable/oswald": "^5.1.1",
+    "astro": "^5.1.1"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "sharp": "^0.33.5",
+    "typescript": "^5.9.3",
+    "vitest": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=18.17.1"
+  }
+}

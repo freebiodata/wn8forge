@@ -1,0 +1,8 @@
+#:schema node_modules/wrangler/config-schema.json
+# Cloudflare Pages configuration — deploy with `npx wrangler pages deploy`
+# (or connect the Git repository in the Cloudflare dashboard: build command
+# `npm run build`, output directory `dist`).
+
+name = "wn8forge"
+pages_build_output_dir = "dist"
+compatibility_date = "2026-10-11"
