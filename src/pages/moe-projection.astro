@@ -1,0 +1,84 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Marks of Excellence (MoE) Calculator | WN8Forge"
+  description="Project your required combined damage targets for 1st, 2nd, and 3rd Gun Marks in World of Tanks."
+>
+  <h1>Marks of Excellence (MoE) Projection</h1>
+  <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+    Estimate required damage plus assist targets across 100-battle moving averages.
+  </p>
+
+  <div class="card" style="max-width: 600px; margin: 0 auto;">
+    <div style="display: grid; gap: 1rem;">
+      <div>
+        <label style="display: block; margin-bottom: 0.25rem; font-weight: 500;">Vehicle Tier</label>
+        <select id="moe-tier">
+          <option value="10" selected>Tier X</option>
+          <option value="9">Tier IX</option>
+          <option value="8">Tier VIII</option>
+          <option value="7">Tier VII</option>
+          <option value="6">Tier VI</option>
+          <option value="5">Tier V</option>
+        </select>
+      </div>
+
+      <div>
+        <label style="display: block; margin-bottom: 0.25rem; font-weight: 500;">Tank Class</label>
+        <select id="moe-class">
+          <option value="heavy" selected>Heavy Tank</option>
+          <option value="medium">Medium Tank</option>
+          <option value="td">Tank Destroyer</option>
+          <option value="light">Light Tank</option>
+        </select>
+      </div>
+
+      <button id="calc-moe-btn" type="button">Project Mark Thresholds</button>
+    </div>
+
+    <div class="grid" style="grid-template-columns: repeat(3, 1fr); margin-top: 1.5rem; text-align: center;">
+      <div style="background: #090d13; border: 1px solid var(--border-color); border-radius: 6px; padding: 1rem;">
+        <div style="font-size: 0.85rem; color: var(--text-muted);">1st Mark (65%)</div>
+        <div style="font-size: 1.5rem; font-weight: 700; color: #58a6ff; margin-top: 0.25rem;" id="mark-1">2,750</div>
+      </div>
+      <div style="background: #090d13; border: 1px solid var(--border-color); border-radius: 6px; padding: 1rem;">
+        <div style="font-size: 0.85rem; color: var(--text-muted);">2nd Mark (85%)</div>
+        <div style="font-size: 1.5rem; font-weight: 700; color: #3fb950; margin-top: 0.25rem;" id="mark-2">3,450</div>
+      </div>
+      <div style="background: #090d13; border: 1px solid var(--border-color); border-radius: 6px; padding: 1rem;">
+        <div style="font-size: 0.85rem; color: var(--text-muted);">3rd Mark (95%)</div>
+        <div style="font-size: 1.5rem; font-weight: 700; color: var(--accent); margin-top: 0.25rem;" id="mark-3">4,100</div>
+      </div>
+    </div>
+  </div>
+
+  <script is:inline>
+    const baseCombined = {
+      10: { heavy: 3400, medium: 3300, td: 3500, light: 3200 },
+      9:  { heavy: 2700, medium: 2600, td: 2800, light: 2500 },
+      8:  { heavy: 2100, medium: 2000, td: 2200, light: 1900 },
+      7:  { heavy: 1600, medium: 1500, td: 1650, light: 1450 },
+      6:  { heavy: 1250, medium: 1200, td: 1300, light: 1150 },
+      5:  { heavy: 900,  medium: 850,  td: 950,  light: 800  }
+    };
+
+    function computeMoE() {
+      const tier = parseInt(document.getElementById('moe-tier').value);
+      const tankClass = document.getElementById('moe-class').value;
+      const base = baseCombined[tier][tankClass];
+
+      const m1 = Math.round(base * 0.82);
+      const m2 = Math.round(base * 1.02);
+      const m3 = Math.round(base * 1.22);
+
+      document.getElementById('mark-1').textContent = m1.toLocaleString();
+      document.getElementById('mark-2').textContent = m2.toLocaleString();
+      document.getElementById('mark-3').textContent = m3.toLocaleString();
+    }
+
+    document.getElementById('calc-moe-btn').addEventListener('click', computeMoE);
+    computeMoE();
+  </script>
+</BaseLayout>

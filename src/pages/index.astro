@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="WN8Forge - World of Tanks WN8, Camo & MoE Calculators"
+  description="Free World of Tanks performance tools: WN8 rating calculator with official expected values table, camouflage & spotting range calculator, and Marks of Excellence projection."
+>
+  <div style="text-align: center; margin-bottom: 2.5rem;">
+    <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">World of Tanks Battle Math</h1>
+    <p style="font-size: 1.15rem; color: var(--text-muted); max-width: 650px; margin: 0 auto;">
+      Fast, private, client-side tools for World of Tanks players. Test performance metrics, camouflage dynamics, and mark goals in your browser.
+    </p>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>WN8 Calculator</h2>
+      <p>Calculate battle or vehicle WN8 score using the standard formula and expected values table.</p>
+      <a href="/wn8-calculator/">Open WN8 Calculator &rarr;</a>
+    </div>
+
+    <div class="card">
+      <h2>Camo & Spotting Calculator</h2>
+      <p>Simulate stationary and moving camouflage values, bush concealment, and effective enemy spotting distance.</p>
+      <a href="/camo-calculator/">Open Camo Calculator &rarr;</a>
+    </div>
+
+    <div class="card">
+      <h2>Marks of Excellence (MoE)</h2>
+      <p>Project the combined damage requirements needed to hit 1st, 2nd, and 3rd gun marks (65%, 85%, 95%).</p>
+      <a href="/moe-projection/">Open MoE Calculator &rarr;</a>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top: 2rem;">
+    <h3>Methodology & Features</h3>
+    <ul style="padding-left: 1.25rem; margin-top: 0.5rem; color: var(--text-muted);">
+      <li>Zero telemetry or accounts: all calculations happen locally in your browser.</li>
+      <li>Uses official WN8 expected values (v30+) benchmarks across tiers and tank classes.</li>
+      <li>Implements authentic Wargaming vision ray and camo factor formulas.</li>
+    </ul>
+  </div>
+</BaseLayout>

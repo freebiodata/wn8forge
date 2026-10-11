@@ -1,0 +1,117 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="WN8 Calculator - World of Tanks Score Estimator | WN8Forge"
+  description="Calculate your World of Tanks WN8 battle rating using damage, frags, spots, defense points, and win rate."
+>
+  <h1>WN8 Rating Calculator</h1>
+  <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+    Estimate your WN8 performance for an individual battle or session based on standard tier-averaged expected values.
+  </p>
+
+  <div class="card" style="max-width: 600px; margin: 0 auto;">
+    <div style="display: grid; gap: 1rem;">
+      <div>
+        <label style="display: block; margin-bottom: 0.25rem; font-weight: 500;">Vehicle Tier</label>
+        <select id="tier">
+          <option value="10" selected>Tier X</option>
+          <option value="9">Tier IX</option>
+          <option value="8">Tier VIII</option>
+          <option value="7">Tier VII</option>
+          <option value="6">Tier VI</option>
+        </select>
+      </div>
+
+      <div>
+        <label style="display: block; margin-bottom: 0.25rem; font-weight: 500;">Damage Dealt</label>
+        <input type="number" id="damage" value="2600" min="0" step="50" />
+      </div>
+
+      <div>
+        <label style="display: block; margin-bottom: 0.25rem; font-weight: 500;">Frags (Kills)</label>
+        <input type="number" id="frags" value="2" min="0" max="15" step="1" />
+      </div>
+
+      <div>
+        <label style="display: block; margin-bottom: 0.25rem; font-weight: 500;">Enemy Vehicles Spotted</label>
+        <input type="number" id="spots" value="1" min="0" max="15" step="1" />
+      </div>
+
+      <div>
+        <label style="display: block; margin-bottom: 0.25rem; font-weight: 500;">Defense Points</label>
+        <input type="number" id="def" value="1" min="0" max="100" step="1" />
+      </div>
+
+      <div>
+        <label style="display: block; margin-bottom: 0.25rem; font-weight: 500;">Battle Result</label>
+        <select id="win">
+          <option value="1" selected>Victory</option>
+          <option value="0">Defeat / Draw</option>
+        </select>
+      </div>
+
+      <button id="calc-btn" type="button">Calculate WN8</button>
+    </div>
+
+    <div class="result-box">
+      <div style="font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Calculated WN8</div>
+      <div class="result-value" id="wn8-result">2,450</div>
+      <div id="wn8-tier" style="margin-top: 0.25rem; font-weight: 600; color: #58a6ff;">Very Good</div>
+    </div>
+  </div>
+
+  <script is:inline>
+    const expected = {
+      10: { dmg: 2100, frag: 1.15, spot: 1.05, def: 0.85, win: 0.52 },
+      9:  { dmg: 1650, frag: 1.05, spot: 0.95, def: 0.80, win: 0.51 },
+      8:  { dmg: 1300, frag: 0.95, spot: 0.90, def: 0.75, win: 0.50 },
+      7:  { dmg: 1000, frag: 0.85, spot: 0.85, def: 0.70, win: 0.50 },
+      6:  { dmg: 750,  frag: 0.80, spot: 0.80, def: 0.65, win: 0.50 }
+    };
+
+    function computeWN8() {
+      const tier = parseInt(document.getElementById('tier').value);
+      const dmg = parseFloat(document.getElementById('damage').value) || 0;
+      const frag = parseFloat(document.getElementById('frags').value) || 0;
+      const spot = parseFloat(document.getElementById('spots').value) || 0;
+      const def = parseFloat(document.getElementById('def').value) || 0;
+      const win = parseFloat(document.getElementById('win').value) || 0;
+
+      const exp = expected[tier];
+      const rDmg = dmg / exp.dmg;
+      const rFrag = frag / exp.frag;
+      const rSpot = spot / exp.spot;
+      const rDef = def / exp.def;
+      const rWin = win / exp.win;
+
+      const rWINc = Math.max(0, (rWin - 0.71) / (1 - 0.71));
+      const rDAMc = Math.max(0, (rDmg - 0.22) / (1 - 0.22));
+      const rFRAGc = Math.max(0, Math.min(rDAMc + 0.2, (rFrag - 0.12) / (1 - 0.12)));
+      const rSPOTc = Math.max(0, Math.min(rDAMc + 0.1, (rSpot - 0.38) / (1 - 0.38)));
+      const rDEFc = Math.max(0, Math.min(rDAMc + 0.1, (rDef - 0.10) / (1 - 0.10)));
+
+      const score = Math.round(
+        980 * rDAMc +
+        210 * (rDAMc * rFRAGc) +
+        155 * (rFRAGc * rSPOTc) +
+        75 * (rDEFc * rFRAGc) +
+        145 * Math.min(1.8, rWINc)
+      );
+
+      document.getElementById('wn8-result').textContent = score.toLocaleString();
+      const ratingLabel = document.getElementById('wn8-tier');
+      if (score >= 2900) { ratingLabel.textContent = 'Super Unicum'; ratingLabel.style.color = '#a335ee'; }
+      else if (score >= 2450) { ratingLabel.textContent = 'Unicum'; ratingLabel.style.color = '#c94ad8'; }
+      else if (score >= 2000) { ratingLabel.textContent = 'Great'; ratingLabel.style.color = '#58a6ff'; }
+      else if (score >= 1600) { ratingLabel.textContent = 'Very Good'; ratingLabel.style.color = '#3fb950'; }
+      else if (score >= 1200) { ratingLabel.textContent = 'Good'; ratingLabel.style.color = '#7ee787'; }
+      else if (score >= 900) { ratingLabel.textContent = 'Average'; ratingLabel.style.color = '#d29922'; }
+      else { ratingLabel.textContent = 'Below Average'; ratingLabel.style.color = '#f85149'; }
+    }
+
+    document.getElementById('calc-btn').addEventListener('click', computeWN8);
+    computeWN8();
+  </script>
+</BaseLayout>

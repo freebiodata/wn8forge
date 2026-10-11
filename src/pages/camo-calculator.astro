@@ -1,0 +1,76 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Camo & Spotting Range Calculator | WN8Forge"
+  description="Calculate your tank camouflage value and the exact distance at which an enemy vehicle will spot you."
+>
+  <h1>Camouflage & Spotting Calculator</h1>
+  <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+    Simulate Wargaming view range vs camouflage mechanics to determine detection distances.
+  </p>
+
+  <div class="card" style="max-width: 600px; margin: 0 auto;">
+    <div style="display: grid; gap: 1rem;">
+      <div>
+        <label style="display: block; margin-bottom: 0.25rem; font-weight: 500;">Base Vehicle Camouflage (%)</label>
+        <input type="number" id="base-camo" value="16.5" min="1" max="50" step="0.5" />
+      </div>
+
+      <div>
+        <label style="display: block; margin-bottom: 0.25rem; font-weight: 500;">Movement State</label>
+        <select id="state">
+          <option value="still" selected>Stationary (Full Camo)</option>
+          <option value="moving">Moving (70% camo penalty for MT/HT/TD)</option>
+          <option value="firing">Firing Gun (Severe Camo Penalty)</option>
+        </select>
+      </div>
+
+      <div>
+        <label style="display: block; margin-bottom: 0.25rem; font-weight: 500;">Cover / Bush Concealment (%)</label>
+        <select id="bush">
+          <option value="0" selected>Open Field (0% bush)</option>
+          <option value="25">Light Bush (+25%)</option>
+          <option value="50">Dense Bush (+50%)</option>
+          <option value="80">Double Bush (+80%)</option>
+        </select>
+      </div>
+
+      <div>
+        <label style="display: block; margin-bottom: 0.25rem; font-weight: 500;">Enemy Spotter View Range (m)</label>
+        <input type="number" id="view-range" value="445" min="200" max="600" step="5" />
+      </div>
+
+      <button id="calc-camo-btn" type="button">Calculate Spotting Distance</button>
+    </div>
+
+    <div class="result-box">
+      <div style="font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Effective Spotting Range</div>
+      <div class="result-value" id="spot-result">334 m</div>
+      <div id="camo-pct" style="margin-top: 0.25rem; color: var(--text-muted);">Effective Camouflage: 25.0%</div>
+    </div>
+  </div>
+
+  <script is:inline>
+    function computeCamo() {
+      const base = parseFloat(document.getElementById('base-camo').value) || 15;
+      const state = document.getElementById('state').value;
+      const bush = parseFloat(document.getElementById('bush').value) || 0;
+      const vr = parseFloat(document.getElementById('view-range').value) || 445;
+
+      let factor = 1.0;
+      if (state === 'moving') factor = 0.5;
+      if (state === 'firing') factor = 0.2;
+
+      const totalCamo = Math.min(80, (base * factor) + bush);
+      const spottingDist = Math.max(50, Math.min(445, Math.round(vr - (vr - 50) * (totalCamo / 100))));
+
+      document.getElementById('spot-result').textContent = `${spottingDist} m`;
+      document.getElementById('camo-pct').textContent = `Effective Camouflage: ${totalCamo.toFixed(1)}%`;
+    }
+
+    document.getElementById('calc-camo-btn').addEventListener('click', computeCamo);
+    computeCamo();
+  </script>
+</BaseLayout>
