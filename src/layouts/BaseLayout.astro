@@ -24,6 +24,11 @@ const canonicalUrl = canonical || `${siteUrl}${currentPath}`;
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={new URL('/og-default.png', Astro.site)} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL('/og-default.png', Astro.site)} />
     <style is:global>
       :root {
         --bg-main: #0d1117;

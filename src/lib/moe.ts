@@ -18,7 +18,7 @@
 
 export interface MoEStanding {
   /** Current mark thresholds in per cent of players. */
-  static readonly?: never;
+  readonly?: never;
 }
 
 export const MARK_THRESHOLDS = [65, 85, 95] as const;
